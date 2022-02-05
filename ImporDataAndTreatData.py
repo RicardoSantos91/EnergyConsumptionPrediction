@@ -1,10 +1,17 @@
 #### Module to import the data and treat for duplicates and NAs ####
 #### Author: Ricardo Santos ####
 
+
+# Import libraries
+
 import pandas as pd
 import os
 
+# Set current working directory
+
 cwd = os.getcwd()
+
+# Import data
 
 building_data = pd.read_feather('site0.ft')
 
@@ -65,7 +72,15 @@ building_data = drop_nas(building_data)
 
 # Save dataset to ft
 
+def save_df_feather(df):
 
+    df = df.reset_index()
+    df.to_feather(cwd + '/' + 'UCF_Data_clean.ft')
+
+    return 0
+
+
+save_df_feather(building_data)
 
 
 
