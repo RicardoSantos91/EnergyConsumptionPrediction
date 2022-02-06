@@ -19,7 +19,8 @@ app = dash.Dash()
 
 # Define dropdown labels
 
-dropdown_labels = df_ucf['building_id'].unique()
+dropdown_labels = df_ucf_electricity['building_id'].unique()
+dropdown_labels_2 = df_ucf_chiller['building_id'].unique()
 
 # Set up the app layout
 
@@ -29,7 +30,13 @@ app.layout = html.Div(children=[
                  options=[{'label': i, 'value': i}
                           for i in dropdown_labels],
                  value='Buildings'),
-    dcc.Graph(id='consumption-graph')
+    dcc.Graph(id='consumption-graph'),
+    html.H1(children='UCF chillers meter reading'),
+    dcc.Dropdown(id='building-dropdown-2',
+                 options=[{'label': i, 'value': i}
+                          for i in dropdown_labels_2],
+                 value='Buildings'),
+    dcc.Graph(id='chillers-graph')
 ])
 
 # Set up callback function
@@ -43,6 +50,7 @@ def update_graph(selected_building):
     line_fig = px.line(filtered_building,
                        x='timestamp', y='meter_reading',
                        title=f'Meter readings in {selected_building}')
+
     return line_fig
 
 
