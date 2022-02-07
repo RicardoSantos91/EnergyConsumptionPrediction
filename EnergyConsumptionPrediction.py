@@ -39,11 +39,20 @@ df_ucf = select_meter_and_building(df_ucf, 0, 0)
 
 # Define training data for building 0 and meter 0 (electricity)
 
-training_data, test_data = train_test_split(df_ucf, test_size=0.2, random_state=2)
+train_data, test_data = train_test_split(df_ucf, test_size=0.2, random_state=2)
 
-# Scaling the data
+# Scale the data
 
-def scaling_data(train, test):
+
+def scale_data(train_set, test_set):
 
     scaler = StandardScaler()
-    scaler = scaler.fit(train)
+    scaler = scaler.fit(train_set[['meter_reading']])
+
+    train_set['meter_reading'] = scaler.transform(train_set[['meter_reading']])
+    test_set['meter_reading'] = scaler.transform(test_set[['meter_reading']])
+
+    return train_set, test_set
+
+
+train_data, test_data = scale_data(train_data, test_data)
