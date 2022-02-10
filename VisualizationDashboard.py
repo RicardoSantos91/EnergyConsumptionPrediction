@@ -32,10 +32,6 @@ app.layout = html.Div(children=[
                  value='Buildings'),
     dcc.Graph(id='consumption-graph'),
     html.H1(children='UCF chillers meter reading'),
-    dcc.Dropdown(id='building-dropdown-2',
-                 options=[{'label': i, 'value': i}
-                          for i in dropdown_labels_2],
-                 value='Buildings'),
     dcc.Graph(id='chillers-graph')
 ])
 
@@ -43,15 +39,21 @@ app.layout = html.Div(children=[
 
 @app.callback(
     Output(component_id='consumption-graph', component_property='figure'),
-    Input(component_id='building-dropdown', component_property='value')
+    Output(component_id='chillers-graph', component_property='figure'),
+    Input(component_id='building-dropdown', component_property='value'),
 )
 def update_graph(selected_building):
-    filtered_building = df_ucf_electricity[df_ucf_electricity['building_id'] == selected_building]
-    line_fig = px.line(filtered_building,
+    electricity_data = df_ucf_electricity[df_ucf_electricity['building_id'] == selected_building]
+    line_fig = px.line(electricity_data,
                        x='timestamp', y='meter_reading',
                        title=f'Meter readings in {selected_building}')
 
-    return line_fig
+    chillers_data = df_ucf_chiller[df_ucf_chiller['building_id'] == selected_building]
+    line_fig_2 = px.line(chillers_data,
+                         x='timestamp', y='meter_reading',
+                         title=f'Meter readings in {selected_building}')
+
+    return line_fig, line_fig_2
 
 
 # Run local server
